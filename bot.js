@@ -19,9 +19,5 @@ bot.command('rules', (ctx) => {
     ctx.reply('📌 Правила чата: https://telegra.ph/Zapovedi-setki-chatov-02-17');
 });
 
-bot.on('text', (ctx) => {
-    ctx.reply('Я получил твоё сообщение: ' + ctx.message.text);
-});
-
 bot.launch();
 console.log('Бот запущен...');
