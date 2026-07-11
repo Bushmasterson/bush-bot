@@ -16,12 +16,7 @@ export default {
     bot.command('github', (ctx) => ctx.reply('https://github.com/Bushmasterson'));
     bot.command('rules', (ctx) => ctx.reply('📌 Правила чата: https://telegra.ph/Zapovedi-setki-chatov-02-17'));
 
-    // 3. Обрабатываем любой текст
-    bot.on('text', (ctx) => {
-      ctx.reply('Я получил твоё сообщение: ' + ctx.message.text);
-    });
-
-    // 4. Обрабатываем входящие запросы
+    // 3. Обрабатываем входящие запросы
     const url = new URL(request.url);
 
     if (url.pathname === '/webhook' && request.method === 'POST') {
