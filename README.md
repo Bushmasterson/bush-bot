@@ -12,5 +12,4 @@
 
 - Node.js
 - Telegraf
-- JavaScript
 - TypeScript
