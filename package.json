@@ -1,17 +1,24 @@
 {
-  "name": "bush-bot",
+  "name": "telebot",
   "version": "1.0.0",
-  "description": "",
-  "main": "bot.js",
+  "description": "Telegram Bot Starter for Cloudflare Workers using Telegraf",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "test": "vitest",
+    "cf-typegen": "wrangler types"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.12.18",
+    "@cloudflare/workers-types": "^4.20260226.1",
+    "@types/node": "^26.1.1",
+    "typescript": "^5.9.3",
+    "vitest": "4.0.18",
+    "wrangler": "^4.69.0"
+  },
   "dependencies": {
-    "dotenv": "^17.4.2",
     "telegraf": "^4.16.3"
   }
 }
