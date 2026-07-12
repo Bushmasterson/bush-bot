@@ -1,14 +1,14 @@
-# 🤖 Bush Bot
+# About
 
-Простой Telegram-бот для чата BushCode.
+Just Telegran bot for @bushmasyerson
 
-## Команды
+## Comands
 
-- /start — приветствие
-- /github — ссылка на GitHub
-- /rules — правила чата
+- /start — hello message
+- /github — link to GitHub
+- /rules — rules of chat
 
-## Стек
+## Tech
 
 - Node.js
 - Telegraf
