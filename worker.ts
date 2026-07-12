@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf';
 
 export default {
-  async fetch(request: Request, env: any) {
+  async fetch(request, env) {
     // 1. Проверяем, что токен получен из переменных окружения
     const token = env.BOT_TOKEN;
     if (!token) {
@@ -21,7 +21,7 @@ export default {
 
     if (url.pathname === '/webhook' && request.method === 'POST') {
       try {
-        const body = await request.json() as any;
+        const body = await request.json();
         await bot.handleUpdate(body);
         return new Response('OK', { status: 200 });
         } catch (error) {
