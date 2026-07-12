@@ -11,7 +11,7 @@ export default {
     const bot = new Telegraf(token);
 
     // 2. Обрабатываем команды
-    bot.start((ctx) => ctx.reply('Привет! Я бот BushCode.'));
+    bot.start((ctx) => ctx.reply('Привет! Я бот Bushbot, и я создан для помощи в чатах @bushmasyerson. Список команд: /help.'));
     bot.help((ctx) => ctx.reply('/github — ссылка на GitHub\n/rules — правила'));
     bot.command('github', (ctx) => ctx.reply('https://github.com/Bushmasterson'));
     bot.command('rules', (ctx) => ctx.reply('📌 Правила чата: https://telegra.ph/Zapovedi-setki-chatov-02-17'));
