@@ -9,12 +9,12 @@ export default {
     }
 
     const bot = new Telegraf(token);
-    const BOT_VERSION = '1.0.1';
+    const BOT_VERSION = '26.2.1';
 
     // 2. Обрабатываем команды
-    bot.start((ctx) => ctx.reply('Привет! Я бот Bushbot, и я создан для помощи в чатах @bushmasterson. Список команд: /help.'));
-    bot.help((ctx) => ctx.reply('/github — ссылка на GitHub\n/rules — правила\n/ping — задержка бота'));
-    bot.command('github', (ctx) => ctx.reply('https://github.com/Bushmasterson'));
+    bot.start((ctx) => ctx.reply('👋 Привет! Я бот Bushbot, и я создан для помощи в чатах @bushmasterson. Список команд: /help.'));
+    bot.help((ctx) => ctx.reply('🎶 /github — ссылка на GitHub\n/rules — правила\n/ping — задержка бота'));
+    bot.command('github', (ctx) => ctx.reply('👾 https://github.com/Bushmasterson'));
     bot.command('rules', (ctx) => ctx.reply('📌 Правила чата: https://t.me/bushnewschat/4556'));
     bot.command('ping', async (ctx) => {
       const start = Date.now();

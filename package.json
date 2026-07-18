@@ -1,5 +1,5 @@
 {
-  "name": "telebot",
+  "name": "bush-bot",
   "version": "1.0.0",
   "description": "Telegram Bot Starter for Cloudflare Workers using Telegraf",
   "private": true,
