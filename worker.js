@@ -1,9 +1,10 @@
-const BOT_TOKEN = 'AAEFY_M3ptUrrGhcc7-tlNS11EC4cKYLee0';
+const BOT_TOKEN = process.env.BOT_TOKEN; // Берём токен из окружения (не из кода!)
 let lastUpdateId = 0;
+
+console.log('🤖 Бот запущен (Long Polling)...');
 
 // Главная функция запуска
 async function main() {
-  console.log('🤖 Бот запущен (Long Polling)...');
   await startPolling();
 }
 
@@ -29,7 +30,6 @@ async function startPolling() {
       console.error('Polling error:', error);
     }
 
-    // Ждём 3 секунды перед следующим запросом
     await sleep(3000);
   }
 }
@@ -71,10 +71,7 @@ async function sendMessage(chatId, text) {
   }
 }
 
-// Запускаем бота
-main();
-
-// Фейковый HTTP-сервер для Render
+// Фейковый сервер для Render
 const http = require('http');
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -83,3 +80,6 @@ const server = http.createServer((req, res) => {
 server.listen(3000, () => {
   console.log('🟢 Fake server started on port 3000');
 });
+
+// Запускаем бота
+main();
