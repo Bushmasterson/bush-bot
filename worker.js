@@ -73,3 +73,13 @@ async function sendMessage(chatId, text) {
 
 // Запускаем бота
 main();
+
+// Фейковый HTTP-сервер для Render
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('✅ Bush-bot is running');
+});
+server.listen(3000, () => {
+  console.log('🟢 Fake server started on port 3000');
+});
