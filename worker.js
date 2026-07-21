@@ -11,7 +11,7 @@ async function startPolling() {
   while (true) {
     try {
       const offset = lastUpdateId + 1;
-      const apiUrl = https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${offset}&timeout=3;
+      const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${offset}&timeout=3`;
       const response = await fetch(apiUrl);
       const data = await response.json();
 
@@ -59,7 +59,7 @@ async function handleMessage(message) {
 }
 
 async function sendMessage(chatId, text) {
-  const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage;
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
   try {
     await fetch(url, {
       method: 'POST',
