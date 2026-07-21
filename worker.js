@@ -1,29 +1,17 @@
 const BOT_TOKEN = 'AAEFY_M3ptUrrGhcc7-tlNS11EC4cKYLee0';
 let lastUpdateId = 0;
 
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-
-    if (url.pathname === '/') {
-      return new Response('✅ Bot is running (Long Polling)', { status: 200 });
-    }
-
-    if (url.pathname === '/poll') {
-      // Запускаем бесконечный опрос
-      await startPolling();
-      return new Response('✅ Polling started', { status: 200 });
-    }
-
-    return new Response('❌ Not found', { status: 404 });
-  }
-};
+// Главная функция запуска
+async function main() {
+  console.log('🤖 Бот запущен (Long Polling)...');
+  await startPolling();
+}
 
 async function startPolling() {
   while (true) {
     try {
       const offset = lastUpdateId + 1;
-      const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${offset}&timeout=3`;
+      const apiUrl = https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${offset}&timeout=3;
       const response = await fetch(apiUrl);
       const data = await response.json();
 
@@ -71,7 +59,7 @@ async function handleMessage(message) {
 }
 
 async function sendMessage(chatId, text) {
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  const url = https://api.telegram.org/bot${BOT_TOKEN}/sendMessage;
   try {
     await fetch(url, {
       method: 'POST',
@@ -82,3 +70,6 @@ async function sendMessage(chatId, text) {
     console.error('Ошибка отправки:', error);
   }
 }
+
+// Запускаем бота
+main();
