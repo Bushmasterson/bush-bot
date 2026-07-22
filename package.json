@@ -1,24 +1,15 @@
 {
   "name": "bush-bot",
-  "version": "1.0.0",
-  "description": "Telegram Bot Starter for Cloudflare Workers using Telegraf",
-  "private": true,
+  "version": "26.7.2.1",
+  "type": "module",
   "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "start": "wrangler dev",
-    "test": "vitest",
-    "cf-typegen": "wrangler types"
-  },
-  "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.12.18",
-    "@cloudflare/workers-types": "^4.20260226.1",
-    "@types/node": "^26.1.1",
-    "typescript": "^5.9.3",
-    "vitest": "4.0.18",
-    "wrangler": "^4.69.0"
+    "start": "node worker.js",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.110.0"
   }
 }
