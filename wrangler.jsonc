@@ -1,0 +1,22 @@
+{
+	"name": "bush-bot",
+	"main": "index.ts",
+	"compatibility_date": "2024-01-01",
+	"kv_namespaces": [
+		{
+			"binding": "ISSUE_STATE",
+			"id": "ff88978c7f344377a8e2a0ea534ac34c",
+      "remote": true
+		},
+		{
+			"binding": "STATS",
+			"id": "c402a9ca392d49f68b3f68c2a1df6352",
+			"remote": true
+		},
+		{
+			"binding": "UPTIME",
+			"id": "beea7a78bdbb42f4b41f50cb30c19d0c",
+			"remote": true
+		}
+	]
+}
