@@ -35,7 +35,7 @@ let START_TIME: number | null = null;
 async function handleMessage(message: any, env: Env) {
   const ADMIN_CHAT_ID = 5999490352;
   const chatId = message.chat.id;
-  const BOT_VERSION = '26.7.2.1';
+  const BOT_VERSION = '1.0.0';
   const text = message.text || '';
   const cleanText = text.split('@')[0];
   const BOT_TOKEN = env.BOT_TOKEN;
@@ -60,7 +60,7 @@ async function handleMessage(message: any, env: Env) {
     } else if (cleanText === '/help') {
       await sendMessage(
         chatId,
-        '/links — ссылки на соцсети\n' +
+          '/links — ссылки на соцсети\n' +
           '/ping — задержка бота\n' +
           '/issue — отправить пожелание или баг-репорт\n' +
           '/cancel — отменить создание запроса\n' +
@@ -76,10 +76,8 @@ async function handleMessage(message: any, env: Env) {
           [
             { text: 'GitHub', url: 'https://github.com/Bushmasterson' },
             {
-              text: 'Bluesky',
-              url: 'https://bsky.app/profile/bushmasterson.bsky.social',
-            },
-            { text: 'Pinterest', url: 'https://pinterest.com/bushmaster_son' },
+              text: 'Bluesky', url: 'https://bsky.app/profile/bushmasterson.bsky.social',
+            }
           ],
         ],
       };
