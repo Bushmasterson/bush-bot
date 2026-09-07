@@ -3,6 +3,7 @@ export interface Env {
   ISSUE_STATE: KVNamespace;
   STATS: KVNamespace;
   UPTIME: KVNamespace;
+  USERS: KVNamespace; // NEW: username -> user_id кэш для /ban
 }
 
 export default {
@@ -37,10 +38,14 @@ async function handleMessage(message: any, env: Env) {
   const chatId = message.chat.id;
   const BOT_VERSION = '1.0.0';
   const text = message.text || '';
-  const cleanText = text.split('@')[0];
   const BOT_TOKEN = env.BOT_TOKEN;
 
   await incrementStat(env, 'messages');
+
+  // NEW: запоминаем username -> id каждого написавшего, чтобы /ban мог его найти
+  if (message.from && message.from.username) {
+    await env.USERS.put('username_' + message.from.username.toLowerCase(), String(message.from.id));
+  }
 
   if (!START_TIME) {
     const storedStart = await env.UPTIME.get('start');
@@ -55,21 +60,29 @@ async function handleMessage(message: any, env: Env) {
   if (text.startsWith('/')) {
     await incrementStat(env, 'requests');
 
-    if (cleanText === '/start') {
+    // NEW: аккуратный разбор команды и аргументов
+    // (старый split('@')[0] по всему тексту ломал бы "/ban @username")
+    const parts = text.trim().split(/\s+/);
+    const cleanCommand = parts[0].split('@')[0]; // срезаем "@BushBot" если команда вида /ban@BushBot
+    const args = parts.slice(1).join(' ');
+
+    if (cleanCommand === '/start') {
       await sendMessage(chatId, 'Привет! Я бот Bushbot. Команды: /help', BOT_TOKEN, env);
-    } else if (cleanText === '/help') {
+    } else if (cleanCommand === '/help') {
       await sendMessage(
         chatId,
           '/links — ссылки на соцсети\n' +
           '/ping — задержка бота\n' +
           '/issue — отправить пожелание или баг-репорт\n' +
           '/cancel — отменить создание запроса\n' +
+          '/rules — правила чата\n' +
+          '/ban — забанить пользователя (только для админа)\n' +
           '/stats — статистика бота\n' +
           '/uptime — время работы',
         BOT_TOKEN,
         env
       );
-    } else if (cleanText === '/links') {
+    } else if (cleanCommand === '/links') {
       const keyboard = {
         inline_keyboard: [
           [{ text: 'Сайт', url: 'https://bushmasterson.github.io' }],
@@ -82,7 +95,7 @@ async function handleMessage(message: any, env: Env) {
         ],
       };
       await sendMessageWithKeyboard(chatId, 'Мои площадки:', BOT_TOKEN, env, keyboard);
-    } else if (cleanText === '/ping') {
+    } else if (cleanCommand === '/ping') {
       const pingStart = Date.now();
 
       const sent = await sendMessageWithResult(chatId, 'Измеряю...', BOT_TOKEN, env);
@@ -106,7 +119,7 @@ async function handleMessage(message: any, env: Env) {
           new Date().toLocaleTimeString(),
         BOT_TOKEN
       );
-    } else if (cleanText === '/issue') {
+    } else if (cleanCommand === '/issue') {
       const state = await env.ISSUE_STATE.get('issue_' + message.from.id);
       if (state === 'awaiting_issue') {
         await sendMessage(
@@ -126,7 +139,7 @@ async function handleMessage(message: any, env: Env) {
         BOT_TOKEN,
         env
       );
-    } else if (cleanText === '/cancel') {
+    } else if (cleanCommand === '/cancel') {
       const state = await env.ISSUE_STATE.get('issue_' + message.from.id);
       if (state === 'awaiting_issue') {
         await env.ISSUE_STATE.delete('issue_' + message.from.id);
@@ -134,7 +147,40 @@ async function handleMessage(message: any, env: Env) {
       } else {
         await sendMessage(chatId, 'Нет активного запроса для отмены.', BOT_TOKEN, env);
       }
-    } else if (cleanText === '/stats') {
+    } else if (cleanCommand === '/rules') {
+      // NEW
+      await sendMessage(chatId, '📌 Правила чата: https://t.me/bushnewschat/4556', BOT_TOKEN, env);
+    } else if (cleanCommand === '/ban') {
+      // NEW
+      if (message.from.id !== ADMIN_CHAT_ID) {
+        await sendMessage(chatId, 'У вас нет прав для этой команды.', BOT_TOKEN, env);
+        return;
+      }
+      if (!args) {
+        await sendMessage(chatId, 'Использование: /ban @username', BOT_TOKEN, env);
+        return;
+      }
+      const usernameArg = args.trim().replace(/^@/, '').toLowerCase();
+      const targetId = await env.USERS.get('username_' + usernameArg);
+      if (!targetId) {
+        await sendMessage(
+          chatId,
+          'Не нашёл @' + usernameArg + ' — он должен был хотя бы раз написать в этот чат, чтобы бот его запомнил.',
+          BOT_TOKEN,
+          env
+        );
+        return;
+      }
+      const success = await banChatMember(chatId, parseInt(targetId, 10), BOT_TOKEN);
+      await sendMessage(
+        chatId,
+        success
+          ? 'Пользователь @' + usernameArg + ' забанен.'
+          : 'Не удалось забанить — проверь, что у бота есть права администратора в этом чате.',
+        BOT_TOKEN,
+        env
+      );
+    } else if (cleanCommand === '/stats') {
       const stats = await getStats(env);
       const today = new Date().toISOString().slice(0, 10);
       await sendMessage(
@@ -153,7 +199,7 @@ async function handleMessage(message: any, env: Env) {
         BOT_TOKEN,
         env
       );
-    } else if (cleanText === '/uptime') {
+    } else if (cleanCommand === '/uptime') {
       const uptimeMs = Date.now() - START_TIME!;
       const uptimeSeconds = Math.floor(uptimeMs / 1000);
       const days = Math.floor(uptimeSeconds / 86400);
@@ -268,6 +314,7 @@ async function sendMessageWithResult(chatId: number, text: string, token: string
     return null;
   }
 }
+
 async function editMessage(chatId: number, messageId: number, text: string, token: string): Promise<void> {
   const url = 'https://api.telegram.org/bot' + token + '/editMessageText';
   try {
@@ -278,5 +325,22 @@ async function editMessage(chatId: number, messageId: number, text: string, toke
     });
   } catch (error) {
     console.error('Ошибка редактирования:', error);
+  }
+}
+
+// NEW: реальный бан через Telegram Bot API
+async function banChatMember(chatId: number, userId: number, token: string): Promise<boolean> {
+  const url = 'https://api.telegram.org/bot' + token + '/banChatMember';
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, user_id: userId }),
+    });
+    const data = (await response.json()) as any;
+    return !!data.ok;
+  } catch (error) {
+    console.error('Ошибка бана:', error);
+    return false;
   }
 }
