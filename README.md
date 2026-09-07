@@ -10,6 +10,7 @@ Commands:
 - /ping
 - /issue
 - /cancel
+- /rules
 - /stats
 - /uptime
 
