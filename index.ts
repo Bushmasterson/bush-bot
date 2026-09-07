@@ -63,6 +63,7 @@ async function handleMessage(message: any, env: Env) {
           '/links — ссылки на соцсети\n' +
           '/ping — задержка бота\n' +
           '/issue — отправить пожелание или баг-репорт\n' +
+					'/rules — просмотреть правила чата\n' +
           '/cancel — отменить создание запроса\n' +
           '/stats — статистика бота\n' +
           '/uptime — время работы',
@@ -153,11 +154,18 @@ async function handleMessage(message: any, env: Env) {
         BOT_TOKEN,
         env
       );
-    } else if (cleanText === '/uptime') {
-      const uptimeMs = Date.now() - START_TIME!;
-      const uptimeSeconds = Math.floor(uptimeMs / 1000);
-      const days = Math.floor(uptimeSeconds / 86400);
-      const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+		} else if (cleanText === '/rules') {
+			await sendMessage(
+				chatId,
+				'📌 Правила чата: https://t.me/bushnewschat/4556',
+				BOT_TOKEN,
+				env
+			);
+		} else if (cleanText === '/uptime') {
+			const uptimeMs = Date.now() - START_TIME!;
+			const uptimeSeconds = Math.floor(uptimeMs / 1000);
+			const days = Math.floor(uptimeSeconds / 86400);
+			const hours = Math.floor((uptimeSeconds % 86400) / 3600);
       const minutes = Math.floor((uptimeSeconds % 3600) / 60);
       const seconds = uptimeSeconds % 60;
 
